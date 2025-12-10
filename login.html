@@ -2,131 +2,148 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Parquímetro Digital</title>
-
     <style>
-        body {
+        /* Reset básico */
+        * {
             margin: 0;
             padding: 0;
-            background: linear-gradient(to bottom right, #0a74da, #022f61);
-            font-family: Arial, Helvetica, sans-serif;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            color: #fff;
+            background: linear-gradient(135deg, #4CAF50, #81C784);
         }
 
         .login-container {
-            background: white;
-            width: 360px;
-            padding: 35px;
-            border-radius: 12px;
-            box-shadow: 0px 4px 25px rgba(0,0,0,0.25);
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            width: 350px;
+        }
+
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 25px;
             color: #333;
-            animation: fadeIn 0.6s ease-out;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
 
-        .logo {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .logo h1 {
-            font-size: 26px;
-            font-weight: bold;
-            color: #0a74da;
-            margin-bottom: 0;
-        }
-
-        .logo span {
-            font-size: 14px;
-            color: #555;
-        }
-
-        label {
-            display: block;
-            margin-top: 15px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #444;
-        }
-
-        input {
+        .login-container button {
             width: 100%;
             padding: 12px;
-            margin-top: 5px;
-            border: 1px solid #aaa;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: 0.2s;
-        }
-
-        input:focus {
-            border-color: #0a74da;
-            outline: none;
-            box-shadow: 0 0 5px rgba(10,116,218,0.3);
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #0a74da;
+            background-color: #4CAF50;
             border: none;
-            color: white;
+            border-radius: 5px;
+            color: #fff;
             font-size: 16px;
-            margin-top: 25px;
-            border-radius: 6px;
             cursor: pointer;
-            transition: 0.2s;
+            margin-top: 15px;
+            transition: background 0.3s;
         }
 
-        button:hover {
-            background: #084c96;
+        .login-container button:hover {
+            background-color: #45a049;
         }
 
-        .footer {
-            text-align: center;
-            margin-top: 18px;
+        .login-container .forgot {
+            text-align: right;
             font-size: 12px;
-            color: #666;
+            margin-top: 10px;
+        }
+
+        .login-container .forgot a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .login-container .forgot a:hover {
+            text-decoration: underline;
+        }
+
+        .show-password {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+            font-size: 12px;
+        }
+
+        .show-password input {
+            margin-right: 5px;
+        }
+
+        .error {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
         }
     </style>
 </head>
-
 <body>
 
     <div class="login-container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Usuário" required>
+            <input type="password" id="password" placeholder="Senha" required>
 
-        <div class="logo">
-            <h1>Parquímetro Digital</h1>
-            <span>Acesso ao sistema</span>
-        </div>
+            <div class="show-password">
+                <input type="checkbox" id="showPassword">
+                <label for="showPassword">Mostrar senha</label>
+            </div>
 
-        <label for="usuario">Usuário</label>
-        <input type="text" id="usuario" placeholder="Digite seu usuário">
+            <button type="submit">Entrar</button>
 
-        <label for="senha">Senha</label>
-        <input type="password" id="senha" placeholder="Digite sua senha">
+            <div class="error" id="errorMsg">Preencha todos os campos!</div>
 
-        <button>Entrar</button>
-
-        <div class="footer">
-            Desenvolvido para a Pós-Graduação
-        </div>
-
+            <div class="forgot">
+                <a href="#">Esqueci minha senha</a>
+            </div>
+        </form>
     </div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const username = document.getElementById('username');
+        const password = document.getElementById('password');
+        const showPassword = document.getElementById('showPassword');
+        const errorMsg = document.getElementById('errorMsg');
+
+        // Mostrar/esconder senha
+        showPassword.addEventListener('change', () => {
+            password.type = showPassword.checked ? 'text' : 'password';
+        });
+
+        // Validação simples do formulário
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Evita o envio real
+
+            if (username.value.trim() === '' || password.value.trim() === '') {
+                errorMsg.style.display = 'block';
+            } else {
+                errorMsg.style.display = 'none';
+                alert(`Bem-vindo, ${username.value}!`);
+                // Aqui você pode redirecionar para outra página
+                // window.location.href = "pagina-principal.html";
+            }
+        });
+    </script>
 
 </body>
 </html>
